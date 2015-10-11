@@ -31,6 +31,11 @@ vector<gl::TextureRef> PingPongFBO::getTextures()
 	return textures;
 }
 
+Rectf PingPongFBO::getBounds()
+{
+	return mFBOs[0]->getBounds();
+}
+
 void PingPongFBO::render(gl::GlslProgRef shader)
 {
 	gl::FboRef target = mFBOs.at((mIteration + 1) % mFBOs.size());

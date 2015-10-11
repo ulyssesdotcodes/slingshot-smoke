@@ -13,6 +13,7 @@ public:
 	gl::TextureRef getTexture();
 	vector<gl::TextureRef> getTextures();
 	void render(gl::GlslProgRef shader);
+	Rectf getBounds();
 
 private:
 	vector<gl::FboRef> mFBOs;
