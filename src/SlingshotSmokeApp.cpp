@@ -4,6 +4,7 @@
 
 #include "Fluid.h"
 #include "Smoker.h"
+#include "CenterSmoker.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -12,7 +13,7 @@ using namespace std;
 class SlingshotSmokeApp : public App {
   public:
 	void setup() override;
-	void mouseDown( MouseEvent event ) override;
+	void keyDown( KeyEvent event ) override;
 	void update() override;
 	void draw() override;
 
@@ -35,13 +36,22 @@ void SlingshotSmokeApp::setup()
 {
 	mLastTime = 0;
 
-	mFluid = Fluid();
+	vec2 fluidResolution = vec2(512);
+
+	mFluid = Fluid(fluidResolution);
+	mCurrentSmoker = new CenterSmoker(fluidResolution, app::getWindowSize());
 
 	mRenderProg = gl::getStockShader(gl::ShaderDef().texture());
-}
 
-void SlingshotSmokeApp::mouseDown( MouseEvent event )
-{
+	gl::Texture2d::Format texFmt;
+	texFmt.setInternalFormat(GL_RGBA16F);
+	texFmt.setDataType(GL_FLOAT);
+	texFmt.setTarget(GL_TEXTURE_2D);
+	texFmt.setWrap(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
+	gl::Fbo::Format fmt;
+	fmt.disableDepth()
+		.setColorTextureFormat(texFmt);
+	mSmokeFBO = PingPongFBO(fmt, getWindowSize(), 4);
 }
 
 void SlingshotSmokeApp::update()
@@ -83,13 +93,26 @@ void SlingshotSmokeApp::draw()
 	gl::popMatrices();
 }
 
+void SlingshotSmokeApp::keyDown(KeyEvent event) {
+	if (event.getChar() == 'q') {
+		quit();
+	}
+}
+
 
 ////////////////////
 // Helper methods
 
 // Drop new smoke onto the FBO
 void SlingshotSmokeApp::drop(gl::GlslProgRef prog, PingPongFBO* target) {
+	gl::ScopedTextureBind scopeSmokeDrop(mSmokeFBO.getTexture(), 0);
+	prog->uniform("tex_prev", 0);
 	target->render(prog);
 }
 
-CINDER_APP( SlingshotSmokeApp, RendererGl )
+CINDER_APP(SlingshotSmokeApp, RendererGl(), [&](App::Settings *settings) {
+	FullScreenOptions options;
+	vector<DisplayRef> displays = Display::getDisplays();
+	settings->setFullScreen(true, options);	
+	settings->setFrameRate(60.0f);
+});

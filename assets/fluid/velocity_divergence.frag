@@ -1,7 +1,6 @@
 #version 330 core
 
 uniform vec2 i_resolution;
-
 uniform sampler2D tex_velocity;
 uniform sampler2D tex_pressure;
 

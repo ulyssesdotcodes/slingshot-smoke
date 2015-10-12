@@ -1,7 +1,7 @@
 #version 330 core
 uniform sampler2D tex_smoke;
 
-uniform vec2 resolution;
+uniform vec2 i_resolution;
 
 out vec4 fragColor;
 

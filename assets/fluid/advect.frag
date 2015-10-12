@@ -4,15 +4,11 @@ uniform vec2 i_resolution;
 uniform vec2 i_target_resolution;
 uniform sampler2D tex_velocity;
 uniform sampler2D tex_target;
-uniform float dt;
-uniform bool boundaryConditions;
+uniform float i_dt;
 
 out vec4 fragColor;
 
 vec4 boundary(vec2 targetPos) {
-	if(!boundaryConditions) {
-		return texture2D(tex_target, targetPos);
-	}
 	vec4 outVel;
 	vec2 offset = vec2(0, 0);
 
@@ -38,9 +34,9 @@ vec4 boundary(vec2 targetPos) {
 }
 
 vec4 inner(vec2 targetPos) {
-	vec4 velocity = texture2D(tex_velocity, targetPos);
+	vec4 velocity = texture2D(tex_velocity, targetPos * i_resolution / i_target_resolution);
 	vec2 resPos = floor(targetPos * i_target_resolution) + 0.5;
-	vec2 tracedPos = resPos - dt * velocity.xy * i_target_resolution ;
+	vec2 tracedPos = resPos - i_dt * velocity.xy * i_target_resolution ;
 	
 	// Calculate the top left corner of the nearest 4 pixels
 	vec2 flooredPos = floor(tracedPos - 0.5) + 0.5;

@@ -12,6 +12,7 @@ using namespace ci;
 class Fluid {
 public:
 	Fluid();
+	Fluid(vec2 fluidResolution);
 
 	// Update the main velocity state
 	void update(float dt, gl::GlslProgRef forces);

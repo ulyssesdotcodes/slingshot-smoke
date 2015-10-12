@@ -1,16 +1,11 @@
 #version 330 core
 
 uniform vec2 i_resolution;
-uniform vec2 windowRes;
 uniform sampler2D tex_velocity;
 uniform sampler2D tex_pressure;
 
-uniform float time;
-uniform float dt;
-
-uniform bool isMouseDown;
-uniform vec2 mouse;
-uniform vec2 lastMouse;
+uniform float i_time;
+uniform float i_dt;
 
 out vec4 fragColor;
 
@@ -37,48 +32,13 @@ vec4 boundary(vec2 pos) {
 
 vec4 inner(vec2 pos) {
 	vec4 velocity = texture2D(tex_velocity, pos);
-	vec2 v = velocity.xy; //* (1.0 - 1.0 * dt);
+	vec2 v = velocity.xy * (1.0 - 1.0 * i_dt);
 
-	vec2 mRev = vec2(mouse.x, 1.0 - mouse.y);
-	vec2 lmRev = vec2(lastMouse.x, 1.0 - lastMouse.y);
-	vec2 mDist = mRev - lmRev;
-
-	if(false && dt > 0.001 && dot(mDist, mDist) > 0.00001) {
-		vec2 mouseVel = mDist / dt;
-
-		vec2 dm = mRev - lmRev;
-		float lm = length(dm);
-
-		float projection = dot(lmRev - pos, dm / lm);
-		float fp = projection / lm;
-		float dist;
-		if(projection < 0.0){
-			dist = length(pos - lmRev);
-		}
-		else if(projection > lm) {
-			dist = length(pos - mRev);
-		}
-		else {
-			dist = sqrt(abs(dot(pos - lmRev, pos - lmRev) - projection*projection));
-		}
-
-		float pf = 1.0 - clamp(fp, 0.0, 1.0) * 0.6;
-		float m = exp(-dist / 0.025);
-
-		m *= pf * pf;
-
-		vec2 mv = pos - mRev;
-
-		v += (mouseVel - v + mv) * m;
-
-		velocity.z = 0.98;
-	}
-
-	if(velocity.z <= 0.00001) {
-		velocity.z = 1.0;
-	}
-
-	v.y += -0.3787 * (1.0 - 1 / max(velocity.z, 0.0001));
+	// Apply force away from the center
+	vec2 vel = pos - vec2(0.5);
+	vel.y *= -1;
+	vel.x *= 2.0 * (0.5 - cos(i_time));
+	v += vel * i_dt * 0.2;
 
 	return vec4(v, velocity.z, 1);
 }

@@ -1,3 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
@@ -12,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{ab938d1a-382b-492f-b0d1-4b39f51b6223}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Fluid">
+      <UniqueIdentifier>{7c531f04-5080-47da-91c0-bb15c395242f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\SlingshotSmokeApp.cpp">
@@ -23,9 +30,33 @@
     <ClInclude Include="..\include\Resources.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClCompile Include="..\src\PingPongFBO.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Fluid.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\CenterSmoker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Smoker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Fluid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PingPongFBO.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Smoker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CenterSmoker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -33,5 +64,34 @@
     <ResourceCompile Include="Resources.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\assets\passthru.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\assets\fluid\advect.frag">
+      <Filter>Shaders\Fluid</Filter>
+    </None>
+    <None Include="..\assets\fluid\advect_maccormack.frag">
+      <Filter>Shaders\Fluid</Filter>
+    </None>
+    <None Include="..\assets\fluid\apply_force.frag">
+      <Filter>Shaders\Fluid</Filter>
+    </None>
+    <None Include="..\assets\fluid\solve_pressure.frag">
+      <Filter>Shaders\Fluid</Filter>
+    </None>
+    <None Include="..\assets\fluid\subtract_pressure.frag">
+      <Filter>Shaders\Fluid</Filter>
+    </None>
+    <None Include="..\assets\fluid\velocity_divergence.frag">
+      <Filter>Shaders\Fluid</Filter>
+    </None>
+    <None Include="..\assets\texture.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\assets\fluid\center_drop.frag">
+      <Filter>Shaders\Fluid</Filter>
+    </None>
   </ItemGroup>
 </Project>
