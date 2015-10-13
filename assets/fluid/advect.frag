@@ -27,7 +27,7 @@ vec4 boundary(vec2 targetPos) {
 	}
 
 	vec4 vel = texture2D(tex_target, targetPos + offset);
-	outVel = vec4(-vel.xy, vel.z, 1);
+	outVel = vec4(vel.xy, vel.z, 1);
 
 	return outVel;
 }
