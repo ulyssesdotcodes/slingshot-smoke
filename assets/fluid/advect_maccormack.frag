@@ -27,8 +27,6 @@ vec4 boundary(vec2 targetPos) {
 	}
 	else if(targetPos.y * i_target_resolution.y >= i_target_resolution.y - 1) {
 		offset.y = -1.1/i_target_resolution.y;
-		vec4 vel = texture2D(tex_target, targetPos + offset);
-		return vec4(vel.xyz, 1);
 	}
 
 	vec4 vel = texture2D(tex_target, targetPos + offset);

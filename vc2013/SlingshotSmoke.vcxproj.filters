@@ -19,6 +19,9 @@
     <Filter Include="Shaders\Fluid">
       <UniqueIdentifier>{7c531f04-5080-47da-91c0-bb15c395242f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\Smokers">
+      <UniqueIdentifier>{dff0e666-83a9-4213-9613-f5280855d5b9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\SlingshotSmokeApp.cpp">
@@ -75,9 +78,6 @@
     <None Include="..\assets\fluid\advect_maccormack.frag">
       <Filter>Shaders\Fluid</Filter>
     </None>
-    <None Include="..\assets\fluid\apply_force.frag">
-      <Filter>Shaders\Fluid</Filter>
-    </None>
     <None Include="..\assets\fluid\solve_pressure.frag">
       <Filter>Shaders\Fluid</Filter>
     </None>
@@ -91,7 +91,10 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="..\assets\fluid\center_drop.frag">
-      <Filter>Shaders\Fluid</Filter>
+      <Filter>Shaders\Smokers</Filter>
+    </None>
+    <None Include="..\assets\fluid\center_force.frag">
+      <Filter>Shaders\Smokers</Filter>
     </None>
   </ItemGroup>
 </Project>

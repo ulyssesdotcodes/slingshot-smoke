@@ -9,11 +9,11 @@ CenterSmoker::CenterSmoker(vec2 fluidResolution, vec2 smokeResolution) : Smoker(
 	gl::GlslProg::Format updateFormat;
 	updateFormat.vertex(app::loadAsset("passthru.vert"));
 
-	updateFormat.fragment(app::loadAsset("Fluid/apply_force.frag"));
+	updateFormat.fragment(app::loadAsset("Smokers/center_force.frag"));
 	mForcesProg = gl::GlslProg::create(updateFormat);
 	mForcesProg->uniform("i_resolution", fluidResolution);
 
-	updateFormat.fragment(app::loadAsset("Fluid/center_drop.frag"));
+	updateFormat.fragment(app::loadAsset("Smokers/center_drop.frag"));
 	mDropProg = gl::GlslProg::create(updateFormat);
 	mDropProg->uniform("i_resolution", smokeResolution);
 }

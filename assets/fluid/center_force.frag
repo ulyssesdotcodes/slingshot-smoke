@@ -24,7 +24,6 @@ vec4 boundary(vec2 pos) {
 	}
 	else if(pos.y * i_resolution.y >= i_resolution.y - 1) {
 		offset.y = -1/i_resolution.y;
-		return vec4(texture2D(tex_velocity, pos + offset).xy, 1.0, 1);
 	}
 
 	return vec4(-texture2D(tex_velocity, pos + offset).xy, 1.0, 1);
@@ -36,9 +35,12 @@ vec4 inner(vec2 pos) {
 
 	// Apply force away from the center
 	vec2 vel = pos - vec2(0.5);
+	if(vel.x > 0.04 || vel.y > 0.04) {
+		return vec4(v, velocity.z, 1);
+	}
 	vel.y *= -1;
 	vel.x *= 2.0 * (0.5 - cos(i_time));
-	v += vel * i_dt * 0.2;
+	v += vec2(0 * vel.x, 1 * vel.y) * i_dt;
 
 	return vec4(v, velocity.z, 1);
 }

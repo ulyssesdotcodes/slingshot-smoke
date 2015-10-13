@@ -18,6 +18,11 @@ float rand(vec2 co){
 
 void main() {
 	vec2 pos = gl_FragCoord.xy / i_resolution.xy;
+	if(pos.x <= 10. / i_resolution.x || pos.y <= 10. / i_resolution.y || pos.x >= 1.0 - 1.1 / i_resolution.x || pos.y >= 1.0 - 1.1 / i_resolution.y) {
+		fragColor = vec4(0);
+		return;
+	}
+
 	vec3 current = texture2D(tex_prev, pos).xyz * 0.99;
 
 	vec2 dropDistance = pos - vec2(0.5);
@@ -25,4 +30,6 @@ void main() {
 	float smoke = max(0, 0.04 - dot(dropDistance, dropDistance)) * i_dt * 16;
 
 	fragColor = vec4(current + vec3(smoke), 1);
+
+	//fragColor = vec4(pos.x, pos.y, 0, 1);
 }

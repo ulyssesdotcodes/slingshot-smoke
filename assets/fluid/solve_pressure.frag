@@ -31,7 +31,6 @@ vec2 boundary(vec2 pos) {
 	}
 	else if(pos.y * i_resolution.y >= i_resolution.y - 1) {
 		offset.y = -1.1/i_resolution.y;
-		return vec2(0);
 	}
 
 	return texture2D(tex_pressure, pos + offset).xy;
@@ -40,7 +39,7 @@ vec2 boundary(vec2 pos) {
 void main() {
 	vec2 outDP;
 	vec2 pos = gl_FragCoord.xy / i_resolution.xy;
-	if(pos.x <= 1. / i_resolution.x || pos.y <= 1. / i_resolution.y || pos.x >= 1.0 - 1 / i_resolution.x || pos.y >= 1.0 - 1 / i_resolution.y) {
+	if(pos.x <= 1. / i_resolution.x || pos.y <= 1. / i_resolution.y || pos.x >= 1.0 - 1.1 / i_resolution.x || pos.y >= 1.0 - 1.1 / i_resolution.y) {
 		outDP = boundary(pos);
 	}
 	else {
