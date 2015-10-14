@@ -90,10 +90,13 @@
     <None Include="..\assets\texture.frag">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="..\assets\fluid\center_drop.frag">
+    <None Include="..\assets\smokers\center_drop.frag">
       <Filter>Shaders\Smokers</Filter>
     </None>
-    <None Include="..\assets\fluid\center_force.frag">
+    <None Include="..\assets\smokers\center_force.frag">
+      <Filter>Shaders\Smokers</Filter>
+    </None>
+    <None Include="..\assets\smokers\center_draw.frag">
       <Filter>Shaders\Smokers</Filter>
     </None>
   </ItemGroup>

@@ -52,11 +52,11 @@ Fluid::Fluid(vec2 fluidResolution)
 }
 
 
-void Fluid::update(float dt, gl::GlslProgRef forces) 
+void Fluid::update(float dt, gl::GlslProgRef forces, gl::TextureRef smoke) 
 {
 	advect(dt, &mVelocityFBO);
 
-	applyForces(forces);
+	applyForces(forces, smoke);
 
 	computeDivergence();
 	solvePressure();
@@ -78,43 +78,46 @@ void Fluid::advect(float dt, PingPongFBO* value)
 	}
 
 	//// Run time backwards for the second one
-	//{
-	//	mAdvectShader->uniform("dt", -dt);
-	//	gl::ScopedTextureBind scopeVel(mVelocityFBO.getTexture(), VELOCITY_POINTER);
-	//	mAdvectShader->uniform("tex_velocity", VELOCITY_POINTER);
-	//	gl::ScopedTextureBind scopeTarget(value->getTexture(), ADVECT_POINTER);
-	//	mAdvectShader->uniform("tex_target", ADVECT_POINTER);
+	{
+		mAdvectShader->uniform("i_dt", -dt);
+		gl::ScopedTextureBind scopeVel(mVelocityFBO.getTexture(), VELOCITY_POINTER);
+		mAdvectShader->uniform("tex_velocity", VELOCITY_POINTER);
+		gl::ScopedTextureBind scopeTarget(value->getTexture(), ADVECT_POINTER);
+		mAdvectShader->uniform("tex_target", ADVECT_POINTER);
 
-	//	mAdvectShader->uniform("i_target_resolution", value->getBounds().getSize());
+		mAdvectShader->uniform("i_target_resolution", value->getBounds().getSize());
 
-	//	value->render(mAdvectShader);
-	//}
+		value->render(mAdvectShader);
+	}
 
-	//{
-	//	mAdvectMaccormackShader->uniform("dt", dt);
-	//	gl::ScopedTextureBind scopeVel(mVelocityFBO.getTexture(), VELOCITY_POINTER);
-	//	mAdvectMaccormackShader->uniform("tex_velocity", VELOCITY_POINTER);
+	{
+		mAdvectMaccormackShader->uniform("i_dt", dt);
+		gl::ScopedTextureBind scopeVel(mVelocityFBO.getTexture(), VELOCITY_POINTER);
+		mAdvectMaccormackShader->uniform("tex_velocity", VELOCITY_POINTER);
 
-	//	vector<gl::TextureRef> textures = value->getTextures();
-	//	gl::ScopedTextureBind scopedPhiN(textures.at(1), 3);
-	//	mAdvectMaccormackShader->uniform("phi_n", 3);
-	//	mAdvectMaccormackShader->uniform("tex_target", 3);
-	//	gl::ScopedTextureBind scopedPhiN1Hat(textures.at(2), 4);
-	//	mAdvectMaccormackShader->uniform("phi_n_1_hat", 4);
-	//	gl::ScopedTextureBind scopedPhiNHat(textures.at(3), 5);
-	//	mAdvectMaccormackShader->uniform("phi_n_hat", 5);
+		vector<gl::TextureRef> textures = value->getTextures();
+		gl::ScopedTextureBind scopedPhiN(textures.at(1), 3);
+		mAdvectMaccormackShader->uniform("phi_n", 3);
+		mAdvectMaccormackShader->uniform("tex_target", 3);
+		gl::ScopedTextureBind scopedPhiN1Hat(textures.at(2), 4);
+		mAdvectMaccormackShader->uniform("phi_n_1_hat", 4);
+		gl::ScopedTextureBind scopedPhiNHat(textures.at(3), 5);
+		mAdvectMaccormackShader->uniform("phi_n_hat", 5);
 
-	//	mAdvectMaccormackShader->uniform("i_target_resolution", value->getBounds().getSize());
+		mAdvectMaccormackShader->uniform("i_target_resolution", value->getBounds().getSize());
 
-	//	value->render(mAdvectMaccormackShader);
-	//}
+		value->render(mAdvectMaccormackShader);
+	}
 
 }
 
-void Fluid::applyForces(gl::GlslProgRef forces)
+void Fluid::applyForces(gl::GlslProgRef forces, gl::TextureRef smoke)
 {
 	gl::ScopedTextureBind scopeVel(mVelocityFBO.getTexture(), VELOCITY_POINTER);
 	forces->uniform("tex_velocity", VELOCITY_POINTER);
+
+	gl::ScopedTextureBind scopeSmoke(smoke, 3);
+	forces->uniform("tex_smoke", 3);
 
 	mVelocityFBO.render(forces);
 }

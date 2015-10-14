@@ -2,10 +2,10 @@
 
 uniform vec2 i_resolution;
 uniform sampler2D tex_velocity;
-uniform sampler2D tex_smoke;
+uniform sampler2D tex_pressure;
 
-uniform float i_dt;
 uniform float i_time;
+uniform float i_dt;
 
 out vec4 fragColor;
 
@@ -31,15 +31,18 @@ vec4 boundary(vec2 pos) {
 
 vec4 inner(vec2 pos) {
 	vec4 velocity = texture2D(tex_velocity, pos);
-	vec2 smoke = texture(tex_smoke, pos).xy; // x is density, y is temperature
-	vec2 v = velocity.xy;
+	vec2 v = velocity.xy * (1.0 - 1.0 * i_dt);
 
-	float Fb = (4 * smoke.x - 0.5 * smoke.y); // buoyancy = (-k*density + (T - T0))
-	v.y += Fb;
+	// Apply force away from the center
+	vec2 vel = pos - vec2(0.5);
+	if(vel.x > 0.04 || vel.y > 0.04) {
+		return vec4(v, velocity.z, 1);
+	}
+	vel.y *= -1;
+	vel.x *= 2.0 * (0.5 - cos(i_time));
+	v += vec2(1 * vel.x, 0 * vel.y) * i_dt;
 
-	v.x += cos(i_time * 0.25) * cos(i_time * 0.25) - 0.5;
-
-	return vec4(v, 0, 1);
+	return vec4(v, velocity.z, 1);
 }
 
 void main() {

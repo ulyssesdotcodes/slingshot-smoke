@@ -36,9 +36,9 @@ vec4 boundary(vec2 targetPos) {
 }
 
 vec4 inner(vec2 targetPos) {
-	vec4 velocity = texture2D(tex_velocity, targetPos * i_resolution / i_target_resolution);
+	vec4 velocity = texture2D(tex_velocity, targetPos);
 	vec2 resPos = floor(targetPos * i_target_resolution) + 0.5;
-	vec2 tracedPos = resPos - i_dt * velocity.xy * i_target_resolution ;
+	vec2 tracedPos = resPos - i_dt * velocity.xy * i_target_resolution / i_resolution;
 	
 	// Calculate the top left corner of the nearest 4 pixels
 	vec2 flooredPos = floor(tracedPos + 0.5);

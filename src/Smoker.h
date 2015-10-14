@@ -1,6 +1,7 @@
 #pragma once
 
 #include "cinder\gl\gl.h"
+#include "Fluid.h"
 
 using namespace ci;
 
@@ -12,9 +13,9 @@ public:
 	Smoker(vec2 fluidResolution, vec2 smokeResolution);
 
 	// Override these!
-	virtual void update(float dt) = 0;
+	virtual void update(float dt, Fluid* fluid) = 0;
 	virtual gl::GlslProgRef getForcesProg() = 0;
-	virtual gl::GlslProgRef getDropProg() = 0;
+	virtual gl::TextureRef getSmokeTexture() = 0;
 
 protected:
 	vec2 mFluidResolution, mSmokeResolution;

@@ -15,10 +15,12 @@ public:
 	Fluid(vec2 fluidResolution);
 
 	// Update the main velocity state
-	void update(float dt, gl::GlslProgRef forces);
+	void update(float dt, gl::GlslProgRef forces, gl::TextureRef smoke);
 
 	// Advect a texture based on the current velocity
 	void advect(float dt, PingPongFBO* value);
+
+	PingPongFBO mVelocityFBO, mPressureFBO;
 
 private:
 	vec2 mFluidResolution;
@@ -30,9 +32,8 @@ private:
 		mPressureSolveShader,
 		mSubtractPressureShader;
 
-	PingPongFBO mVelocityFBO, mPressureFBO;
 
-	void applyForces(gl::GlslProgRef forces);
+	void applyForces(gl::GlslProgRef forces, gl::TextureRef smoke);
 	void computeDivergence();
 	void solvePressure();
 	void subtractPressure();

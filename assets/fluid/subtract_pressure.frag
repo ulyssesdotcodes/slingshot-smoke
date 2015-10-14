@@ -24,7 +24,7 @@ vec4 boundary(vec2 pos) {
 	}
 
 	vec4 vel = texture2D(tex_velocity, pos + offset);
-	return vec4(-vel.xy, vel.z, 1);
+	return vec4(-vel.xy, 0, 1);
 }
 
 vec4 inner(vec2 pos) {
@@ -40,7 +40,7 @@ vec4 inner(vec2 pos) {
 void main() {
 	vec4 outVelocity;
 	vec2 pos = gl_FragCoord.xy / i_resolution.xy;
-	if(pos.x <= 1. / i_resolution.x || pos.y <= 1. / i_resolution.y || pos.x >= 1.0 - 1 / i_resolution.x || pos.y >= 1.0 - 1 / i_resolution.y) {
+	if(pos.x <= 1. / i_resolution.x || pos.y <= 1. / i_resolution.y || pos.x >= 1.0 - 1.0 / i_resolution.x || pos.y >= 1.0 - 1.0 / i_resolution.y) {
 		outVelocity = boundary(pos);
 	}
 	else {

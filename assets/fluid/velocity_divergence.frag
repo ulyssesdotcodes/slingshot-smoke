@@ -23,7 +23,7 @@ vec4 boundary(vec2 pos) {
 		offset.y = -1.1/i_resolution.y;
 	}
 
-	return vec4(0, texture2D(tex_pressure, pos + offset).y, 0, 1);
+	return texture2D(tex_pressure, pos + offset).xy;
 }
 
 vec4 inner(vec2 pos) {

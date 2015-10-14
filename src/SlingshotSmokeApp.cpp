@@ -22,11 +22,9 @@ private:
 
 	Fluid mFluid;
 	Smoker* mCurrentSmoker;
-	PingPongFBO mSmokeFBO;
 
 	gl::GlslProgRef mRenderProg;
 
-	void drop(gl::GlslProgRef prog, PingPongFBO* target);
 };
 
 ////////////////////
@@ -42,16 +40,6 @@ void SlingshotSmokeApp::setup()
 	mCurrentSmoker = new CenterSmoker(fluidResolution, app::getWindowSize());
 
 	mRenderProg = gl::getStockShader(gl::ShaderDef().texture());
-
-	gl::Texture2d::Format texFmt;
-	texFmt.setInternalFormat(GL_RGBA16F);
-	texFmt.setDataType(GL_FLOAT);
-	texFmt.setTarget(GL_TEXTURE_2D);
-	texFmt.setWrap(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
-	gl::Fbo::Format fmt;
-	fmt.disableDepth()
-		.setColorTextureFormat(texFmt);
-	mSmokeFBO = PingPongFBO(fmt, getWindowSize(), 4);
 }
 
 void SlingshotSmokeApp::update()
@@ -61,33 +49,27 @@ void SlingshotSmokeApp::update()
 	mLastTime = time;
 
 	// Update the smoker so that it has the correct forces shader and ping pong fbo
-	mCurrentSmoker->update(dt);
-
-	// Update the fluid with the smoker's forces shader
-	mFluid.update(dt, mCurrentSmoker->getForcesProg());
-
-	// Drop new smoke
-	drop(mCurrentSmoker->getDropProg(), &mSmokeFBO);
-
-	// Use the fluid to advect the smoke
-	mFluid.advect(dt, &mSmokeFBO);
+	mCurrentSmoker->update(dt, &mFluid);
 }
 
 void SlingshotSmokeApp::draw()
 {
+	vec2 size = mCurrentSmoker->getSmokeTexture()->getSize();
+
 	gl::clear( Color( 0, 0, 0 ) ); 
 
-	// Bind the smoke texture
-	gl::ScopedTextureBind texScope(mSmokeFBO.getTexture());
-
 	// Set the appropriate bounds
-	gl::ScopedViewport vp(ivec2(0), mSmokeFBO.getBounds().getSize());
+	gl::ScopedViewport vp(ivec2(0), size);
 	gl::pushMatrices();
-	gl::setMatricesWindow(mSmokeFBO.getBounds().getSize());
+	gl::setMatricesWindow(size);
+
+	gl::ScopedGlslProg glsl(mRenderProg);
 
 	// Draw the smoke texture
-	gl::ScopedGlslProg glsl(mRenderProg);
-	gl::drawSolidRect(mSmokeFBO.getBounds());
+	{
+		gl::ScopedTextureBind texScope(mCurrentSmoker->getSmokeTexture());
+		gl::drawSolidRect(mCurrentSmoker->getSmokeTexture()->getBounds());
+	}
 
 	// Pop everything for good measure
 	gl::popMatrices();
@@ -103,12 +85,6 @@ void SlingshotSmokeApp::keyDown(KeyEvent event) {
 ////////////////////
 // Helper methods
 
-// Drop new smoke onto the FBO
-void SlingshotSmokeApp::drop(gl::GlslProgRef prog, PingPongFBO* target) {
-	gl::ScopedTextureBind scopeSmokeDrop(mSmokeFBO.getTexture(), 0);
-	prog->uniform("tex_prev", 0);
-	target->render(prog);
-}
 
 CINDER_APP(SlingshotSmokeApp, RendererGl(), [&](App::Settings *settings) {
 	FullScreenOptions options;

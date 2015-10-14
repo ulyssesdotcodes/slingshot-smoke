@@ -2,6 +2,7 @@
 
 uniform vec2 i_resolution;
 uniform float i_dt;
+uniform float i_time;
 uniform sampler2D tex_prev;
 
 out vec4 fragColor;
@@ -18,18 +19,21 @@ float rand(vec2 co){
 
 void main() {
 	vec2 pos = gl_FragCoord.xy / i_resolution.xy;
-	if(pos.x <= 10. / i_resolution.x || pos.y <= 10. / i_resolution.y || pos.x >= 1.0 - 1.1 / i_resolution.x || pos.y >= 1.0 - 1.1 / i_resolution.y) {
-		fragColor = vec4(0);
-		return;
-	}
 
-	vec3 current = texture2D(tex_prev, pos).xyz * 0.99;
+	vec3 current = texture2D(tex_prev, pos).xyz;
+	current.x *= (1.0 - 0.5 * i_dt);
+	current.y *= (1.0 - 0.1 * i_dt);
 
 	vec2 dropDistance = pos - vec2(0.5);
 
-	float smoke = max(0, 0.04 - dot(dropDistance, dropDistance)) * i_dt * 16;
+	float density = max(0, 0.01 - dot(dropDistance, dropDistance)) * i_dt * 64;
 
-	fragColor = vec4(current + vec3(smoke), 1);
+	float temperature = current.y + density * 0.125;
 
-	//fragColor = vec4(pos.x, pos.y, 0, 1);
+	float hue = current.z;
+	if(density > 0.0001) {
+		hue = abs(mod(i_time, 2.) - 1.) * 0.25;
+	}
+
+	fragColor = vec4(current.x + density, temperature, hue, 1);
 }
