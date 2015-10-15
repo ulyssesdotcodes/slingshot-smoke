@@ -106,9 +106,9 @@
     <None Include="..\assets\fluid\subtract_pressure.frag" />
     <None Include="..\assets\fluid\velocity_divergence.frag" />
     <None Include="..\assets\passthru.vert" />
-    <None Include="..\assets\smokers\center_draw.frag" />
-    <None Include="..\assets\smokers\center_drop.frag" />
-    <None Include="..\assets\smokers\center_force.frag" />
+    <None Include="..\assets\smokers\smoke_draw.frag" />
+    <None Include="..\assets\smokers\position_drop.frag" />
+    <None Include="..\assets\smokers\smoke_forces.frag" />
     <None Include="..\assets\texture.frag" />
   </ItemGroup>
   <ItemGroup />

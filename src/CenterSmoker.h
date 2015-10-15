@@ -12,12 +12,12 @@ public:
 	gl::TextureRef getSmokeTexture();
 
 private:
-	gl::GlslProgRef 
-		mForcesProg,
-		mDropProg,
-		mDrawProg;
+	float mVolumeMult;
 
-	gl::FboRef mSmokeFBO;
+	gl::GlslProgRef
+		mForcesProg,
+		mDropProg;
+
 	PingPongFBO mSmokeFields;
 
 	void drop(gl::GlslProgRef prog, PingPongFBO* target);

@@ -4,6 +4,7 @@ uniform vec2 i_resolution;
 uniform float i_dt;
 uniform float i_time;
 uniform float i_volume;
+uniform vec2 i_smokePosition;
 uniform sampler2D tex_prev;
 
 out vec4 fragColor;
@@ -22,10 +23,10 @@ void main() {
 	vec2 pos = gl_FragCoord.xy / i_resolution.xy;
 
 	vec3 current = texture2D(tex_prev, pos).xyz;
-	current.x *= (1.0 - 0.5 * i_dt);
-	current.y *= (1.0 - 0.1 * i_dt);
+	current.x *= (1.0 - 0.8 * i_dt);
+	current.y *= (1.0 - 0.05 * i_dt);
 
-	vec2 dropDistance = pos - vec2(0.5);
+	vec2 dropDistance = pos - i_smokePosition;
 
 	float density = max(0, 0.01 - dot(dropDistance, dropDistance)) * i_dt * 32 * i_volume;
 

@@ -6,20 +6,19 @@ using namespace ci;
 
 CenterSmoker::CenterSmoker(vec2 fluidResolution, vec2 smokeResolution) : Smoker(fluidResolution, smokeResolution)
 {
+	mVolumeMult = 5.0;
+
 	gl::GlslProg::Format updateFormat;
 	updateFormat.vertex(app::loadAsset("passthru.vert"));
 
-	updateFormat.fragment(app::loadAsset("Smokers/center_force.frag"));
+	updateFormat.fragment(app::loadAsset("Smokers/smoke_forces.frag"));
 	mForcesProg = gl::GlslProg::create(updateFormat);
 	mForcesProg->uniform("i_resolution", fluidResolution);
 
-	updateFormat.fragment(app::loadAsset("Smokers/center_drop.frag"));
+	updateFormat.fragment(app::loadAsset("Smokers/position_drop.frag"));
 	mDropProg = gl::GlslProg::create(updateFormat);
 	mDropProg->uniform("i_resolution", smokeResolution);
 
-	updateFormat.fragment(app::loadAsset("Smokers/center_draw.frag"));
-	mDrawProg = gl::GlslProg::create(updateFormat);
-	mDrawProg->uniform("i_resolution", smokeResolution);
 
 	gl::Texture2d::Format texFmt;
 	texFmt.setInternalFormat(GL_RGBA32F);
@@ -30,8 +29,6 @@ CenterSmoker::CenterSmoker(vec2 fluidResolution, vec2 smokeResolution) : Smoker(
 	fmt.disableDepth()
 		.setColorTextureFormat(texFmt);
 	mSmokeFields = PingPongFBO(fmt, smokeResolution, 4);
-
-	mSmokeFBO = gl::Fbo::create(smokeResolution.x, smokeResolution.y, fmt);
 }
 
 void CenterSmoker::update(float dt, Fluid* fluid, AudioSource* audioSource) 
@@ -40,7 +37,8 @@ void CenterSmoker::update(float dt, Fluid* fluid, AudioSource* audioSource)
 	mForcesProg->uniform("i_time", (float) app::getElapsedSeconds());
 	mDropProg->uniform("i_dt", dt);
 	mDropProg->uniform("i_time", (float) app::getElapsedSeconds());
-	mDropProg->uniform("i_volume", audioSource->getVolume());
+	mDropProg->uniform("i_volume", audioSource->getVolume() * mVolumeMult);
+	mDropProg->uniform("i_smokePosition", vec2(0.5, 0.1));
 
 	// Drop new smoke
 	drop(mDropProg, &mSmokeFields);
@@ -52,20 +50,6 @@ void CenterSmoker::update(float dt, Fluid* fluid, AudioSource* audioSource)
 	fluid->update(dt, mForcesProg, mSmokeFields.getTexture());
 
 	{
-		gl::ScopedFramebuffer smoke(mSmokeFBO);
-		gl::clear(Color(0, 0, 0));
-
-		gl::ScopedTextureBind tex(mSmokeFields.getTexture(), 2);
-		mDrawProg->uniform("tex", 2);
-
-		gl::ScopedViewport vp(ivec2(0), mSmokeFBO->getSize());
-		gl::pushMatrices();
-		gl::setMatricesWindow(mSmokeFBO->getSize());
-		gl::ScopedGlslProg glsl(mDrawProg);
-
-		gl::drawSolidRect(mSmokeFBO->getBounds());
-
-		gl::popMatrices();
 	}
 }
 
@@ -83,5 +67,5 @@ gl::GlslProgRef CenterSmoker::getForcesProg()
 
 gl::TextureRef CenterSmoker::getSmokeTexture()
 {
-	return mSmokeFBO->getColorTexture();
+	return mSmokeFields.getTexture();
 }

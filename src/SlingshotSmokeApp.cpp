@@ -40,11 +40,16 @@ void SlingshotSmokeApp::setup()
 	mAudioSource.setup();
 
 	vec2 fluidResolution = vec2(512);
+	vec2 smokeResolution = app::getWindowSize();
 
 	mFluid = Fluid(fluidResolution);
-	mCurrentSmoker = new CenterSmoker(fluidResolution, app::getWindowSize());
+	mCurrentSmoker = new CenterSmoker(fluidResolution, smokeResolution);
 
-	mRenderProg = gl::getStockShader(gl::ShaderDef().texture());
+	gl::GlslProg::Format renderFormat;
+	renderFormat.vertex(app::loadAsset("passthru.vert"));
+	renderFormat.fragment(app::loadAsset("Smokers/smoke_draw.frag"));
+	mRenderProg = gl::GlslProg::create(renderFormat);
+	mRenderProg->uniform("i_resolution", smokeResolution);
 }
 
 void SlingshotSmokeApp::update()
@@ -61,24 +66,18 @@ void SlingshotSmokeApp::update()
 
 void SlingshotSmokeApp::draw()
 {
-	vec2 size = mCurrentSmoker->getSmokeTexture()->getSize();
+	gl::clear(Color(0, 0, 0));
 
-	gl::clear( Color( 0, 0, 0 ) ); 
+	gl::ScopedTextureBind tex(mCurrentSmoker->getSmokeTexture(), 2);
+	mRenderProg->uniform("tex", 2);
 
-	// Set the appropriate bounds
-	gl::ScopedViewport vp(ivec2(0), size);
+	gl::ScopedViewport vp(ivec2(0), mCurrentSmoker->getSmokeTexture()->getSize());
 	gl::pushMatrices();
-	gl::setMatricesWindow(size);
-
+	gl::setMatricesWindow(mCurrentSmoker->getSmokeTexture()->getSize());
 	gl::ScopedGlslProg glsl(mRenderProg);
 
-	// Draw the smoke texture
-	{
-		gl::ScopedTextureBind texScope(mCurrentSmoker->getSmokeTexture());
-		gl::drawSolidRect(mCurrentSmoker->getSmokeTexture()->getBounds());
-	}
+	gl::drawSolidRect(mCurrentSmoker->getSmokeTexture()->getBounds());
 
-	// Pop everything for good measure
 	gl::popMatrices();
 }
 

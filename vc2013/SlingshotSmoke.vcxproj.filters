@@ -96,13 +96,13 @@
     <None Include="..\assets\texture.frag">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="..\assets\smokers\center_drop.frag">
+    <None Include="..\assets\smokers\position_drop.frag">
       <Filter>Shaders\Smokers</Filter>
     </None>
-    <None Include="..\assets\smokers\center_force.frag">
+    <None Include="..\assets\smokers\smoke_draw.frag">
       <Filter>Shaders\Smokers</Filter>
     </None>
-    <None Include="..\assets\smokers\center_draw.frag">
+    <None Include="..\assets\smokers\smoke_forces.frag">
       <Filter>Shaders\Smokers</Filter>
     </None>
   </ItemGroup>
