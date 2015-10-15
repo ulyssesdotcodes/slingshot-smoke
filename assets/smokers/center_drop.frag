@@ -3,6 +3,7 @@
 uniform vec2 i_resolution;
 uniform float i_dt;
 uniform float i_time;
+uniform float i_volume;
 uniform sampler2D tex_prev;
 
 out vec4 fragColor;
@@ -26,9 +27,9 @@ void main() {
 
 	vec2 dropDistance = pos - vec2(0.5);
 
-	float density = max(0, 0.01 - dot(dropDistance, dropDistance)) * i_dt * 64;
+	float density = max(0, 0.01 - dot(dropDistance, dropDistance)) * i_dt * 32 * i_volume;
 
-	float temperature = current.y + density * 0.125;
+	float temperature = current.y + density * 8;
 
 	float hue = current.z;
 	if(density > 0.0001) {

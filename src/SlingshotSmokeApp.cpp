@@ -20,6 +20,8 @@ class SlingshotSmokeApp : public App {
 private:
 	float mLastTime;
 
+	AudioSource mAudioSource;
+
 	Fluid mFluid;
 	Smoker* mCurrentSmoker;
 
@@ -33,6 +35,9 @@ private:
 void SlingshotSmokeApp::setup()
 {
 	mLastTime = 0;
+
+	mAudioSource = AudioSource();
+	mAudioSource.setup();
 
 	vec2 fluidResolution = vec2(512);
 
@@ -48,8 +53,10 @@ void SlingshotSmokeApp::update()
 	float dt = time - mLastTime;
 	mLastTime = time;
 
+	mAudioSource.update();
+
 	// Update the smoker so that it has the correct forces shader and ping pong fbo
-	mCurrentSmoker->update(dt, &mFluid);
+	mCurrentSmoker->update(dt, &mFluid, &mAudioSource);
 }
 
 void SlingshotSmokeApp::draw()

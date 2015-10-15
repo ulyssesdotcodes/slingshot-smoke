@@ -113,6 +113,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <ClCompile Include="..\src\AudioSource.cpp" />
     <ClCompile Include="..\src\CenterSmoker.cpp" />
     <ClCompile Include="..\src\Fluid.cpp" />
     <ClCompile Include="..\src\PingPongFBO.cpp" />
@@ -121,6 +122,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h" />
+    <ClInclude Include="..\src\AudioSource.h" />
     <ClInclude Include="..\src\CenterSmoker.h" />
     <ClInclude Include="..\src\Fluid.h" />
     <ClInclude Include="..\src\PingPongFBO.h" />

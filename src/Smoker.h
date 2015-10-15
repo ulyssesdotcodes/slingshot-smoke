@@ -2,6 +2,7 @@
 
 #include "cinder\gl\gl.h"
 #include "Fluid.h"
+#include "AudioSource.h"
 
 using namespace ci;
 
@@ -13,7 +14,7 @@ public:
 	Smoker(vec2 fluidResolution, vec2 smokeResolution);
 
 	// Override these!
-	virtual void update(float dt, Fluid* fluid) = 0;
+	virtual void update(float dt, Fluid* fluid, AudioSource* audioSource) = 0;
 	virtual gl::GlslProgRef getForcesProg() = 0;
 	virtual gl::TextureRef getSmokeTexture() = 0;
 

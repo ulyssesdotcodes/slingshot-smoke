@@ -7,7 +7,7 @@ class CenterSmoker : public Smoker
 {
 public:
 	CenterSmoker(vec2 fluidResolution, vec2 smokeResolution);
-	void update(float dt, Fluid* fluid);
+	void update(float dt, Fluid* fluid, AudioSource* audioSource);
 	gl::GlslProgRef getForcesProg();
 	gl::TextureRef getSmokeTexture();
 

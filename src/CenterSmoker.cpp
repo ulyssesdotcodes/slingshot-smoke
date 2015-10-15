@@ -34,12 +34,13 @@ CenterSmoker::CenterSmoker(vec2 fluidResolution, vec2 smokeResolution) : Smoker(
 	mSmokeFBO = gl::Fbo::create(smokeResolution.x, smokeResolution.y, fmt);
 }
 
-void CenterSmoker::update(float dt, Fluid* fluid) 
+void CenterSmoker::update(float dt, Fluid* fluid, AudioSource* audioSource) 
 {
 	mForcesProg->uniform("i_dt", dt);
 	mForcesProg->uniform("i_time", (float) app::getElapsedSeconds());
 	mDropProg->uniform("i_dt", dt);
 	mDropProg->uniform("i_time", (float) app::getElapsedSeconds());
+	mDropProg->uniform("i_volume", audioSource->getVolume());
 
 	// Drop new smoke
 	drop(mDropProg, &mSmokeFields);
