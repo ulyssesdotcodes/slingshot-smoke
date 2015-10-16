@@ -29,10 +29,7 @@ vec4 boundary(vec2 targetPos) {
 		offset.y = -1.1/i_target_resolution.y;
 	}
 
-	vec4 vel = texture2D(tex_target, targetPos + offset);
-	outVel = vec4(vel.xy, vel.z, 1);
-
-	return outVel;
+	return texture2D(tex_target, targetPos + offset);
 }
 
 vec4 inner(vec2 targetPos) {

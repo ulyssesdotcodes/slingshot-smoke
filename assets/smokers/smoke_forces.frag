@@ -26,13 +26,12 @@ vec4 boundary(vec2 pos) {
 		offset.y = -1/i_resolution.y;
 	}
 
-	return vec4(texture2D(tex_velocity, pos + offset).xy, 1.0, 1);
+	return texture2D(tex_velocity, pos + offset);
 }
 
 vec4 inner(vec2 pos) {
-	vec4 velocity = texture2D(tex_velocity, pos);
-	vec2 smoke = texture(tex_smoke, pos).xy; // x is density, y is temperature
-	vec2 v = velocity.xy;
+	vec4 v = texture2D(tex_velocity, pos);
+	vec2 smoke = texture2D(tex_smoke, pos).xy; // x is density, y is temperature
 
 	float Fb = (4 * smoke.y - 0.2 * smoke.x); // buoyancy = (-k*density + (T - T0))
 	v.y += Fb;
@@ -40,7 +39,7 @@ vec4 inner(vec2 pos) {
 	// Add this line in to move the smoke back and forth a bit
 	// v.x += cos(i_time * 0.25) * cos(i_time * 0.25) - 0.5;
 
-	return vec4(v, 0, 1);
+	return v;
 }
 
 void main() {

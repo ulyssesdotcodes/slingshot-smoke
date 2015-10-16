@@ -14,10 +14,10 @@ public:
 	Smoker(vec2 fluidResolution, vec2 smokeResolution);
 
 	// Override these!
-	virtual void update(float dt, Fluid* fluid, AudioSource* audioSource) = 0;
-	virtual gl::GlslProgRef getForcesProg() = 0;
-	virtual gl::TextureRef getSmokeTexture() = 0;
+	virtual void update(float dt, Fluid* fluid, AudioSource* audioSource, PingPongFBO* smokeField) = 0;
 
 protected:
 	vec2 mFluidResolution, mSmokeResolution;
+
+	void drop(gl::GlslProgRef prog, PingPongFBO* target);
 };

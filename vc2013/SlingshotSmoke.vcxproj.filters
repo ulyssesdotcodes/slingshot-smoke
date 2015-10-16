@@ -39,13 +39,16 @@
     <ClCompile Include="..\src\Fluid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\CenterSmoker.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Smoker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\AudioSource.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\BottomSmoker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PositionSmoker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -62,10 +65,13 @@
     <ClInclude Include="..\src\Smoker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\CenterSmoker.h">
+    <ClInclude Include="..\src\AudioSource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\AudioSource.h">
+    <ClInclude Include="..\src\BottomSmoker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PositionSmoker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -103,6 +109,9 @@
       <Filter>Shaders\Smokers</Filter>
     </None>
     <None Include="..\assets\smokers\smoke_forces.frag">
+      <Filter>Shaders\Smokers</Filter>
+    </None>
+    <None Include="..\assets\smokers\line_drop.frag">
       <Filter>Shaders\Smokers</Filter>
     </None>
   </ItemGroup>

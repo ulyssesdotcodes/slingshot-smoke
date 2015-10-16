@@ -4,7 +4,8 @@
 
 #include "Fluid.h"
 #include "Smoker.h"
-#include "CenterSmoker.h"
+#include "PositionSmoker.h"
+#include "BottomSmoker.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -23,10 +24,12 @@ private:
 	AudioSource mAudioSource;
 
 	Fluid mFluid;
-	Smoker* mCurrentSmoker;
+	PingPongFBO mSmokeField;
+
+	vector<shared_ptr<Smoker>> mSmokers;
+	int mCurrentSmoker;
 
 	gl::GlslProgRef mRenderProg;
-
 };
 
 ////////////////////
@@ -43,13 +46,26 @@ void SlingshotSmokeApp::setup()
 	vec2 smokeResolution = app::getWindowSize();
 
 	mFluid = Fluid(fluidResolution);
-	mCurrentSmoker = new CenterSmoker(fluidResolution, smokeResolution);
+	mSmokers.reserve(2);
+	mSmokers.push_back(shared_ptr<BottomSmoker>(new BottomSmoker(fluidResolution, smokeResolution)));
+	mSmokers.push_back(shared_ptr<PositionSmoker>(new PositionSmoker(fluidResolution, smokeResolution)));
+	mCurrentSmoker = 0;
 
 	gl::GlslProg::Format renderFormat;
 	renderFormat.vertex(app::loadAsset("passthru.vert"));
 	renderFormat.fragment(app::loadAsset("Smokers/smoke_draw.frag"));
 	mRenderProg = gl::GlslProg::create(renderFormat);
 	mRenderProg->uniform("i_resolution", smokeResolution);
+
+	gl::Texture2d::Format texFmt;
+	texFmt.setInternalFormat(GL_RGBA32F);
+	texFmt.setDataType(GL_FLOAT);
+	texFmt.setTarget(GL_TEXTURE_2D);
+	texFmt.setWrap(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
+	gl::Fbo::Format fmt;
+	fmt.disableDepth()
+		.setColorTextureFormat(texFmt);
+	mSmokeField = PingPongFBO(fmt, smokeResolution, 4);
 }
 
 void SlingshotSmokeApp::update()
@@ -61,29 +77,34 @@ void SlingshotSmokeApp::update()
 	mAudioSource.update();
 
 	// Update the smoker so that it has the correct forces shader and ping pong fbo
-	mCurrentSmoker->update(dt, &mFluid, &mAudioSource);
+	mSmokers[mCurrentSmoker]->update(dt, &mFluid, &mAudioSource, &mSmokeField);
 }
 
 void SlingshotSmokeApp::draw()
 {
 	gl::clear(Color(0, 0, 0));
 
-	gl::ScopedTextureBind tex(mCurrentSmoker->getSmokeTexture(), 2);
+	gl::ScopedTextureBind tex(mSmokeField.getTexture(), 2);
 	mRenderProg->uniform("tex", 2);
 
-	gl::ScopedViewport vp(ivec2(0), mCurrentSmoker->getSmokeTexture()->getSize());
+	gl::ScopedViewport vp(ivec2(0), mSmokeField.getTexture()->getSize());
 	gl::pushMatrices();
-	gl::setMatricesWindow(mCurrentSmoker->getSmokeTexture()->getSize());
+	gl::setMatricesWindow(mSmokeField.getTexture()->getSize());
 	gl::ScopedGlslProg glsl(mRenderProg);
 
-	gl::drawSolidRect(mCurrentSmoker->getSmokeTexture()->getBounds());
+	gl::drawSolidRect(mSmokeField.getTexture()->getBounds());
 
 	gl::popMatrices();
 }
 
 void SlingshotSmokeApp::keyDown(KeyEvent event) {
-	if (event.getChar() == 'q') {
+	switch (event.getChar()) {
+	case 'q':
 		quit();
+		break;
+	case ' ':
+		mCurrentSmoker = (mCurrentSmoker == mSmokers.size() - 1) ? 0 : mCurrentSmoker + 1;
+		break;
 	}
 }
 
