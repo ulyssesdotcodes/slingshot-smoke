@@ -14,7 +14,7 @@ public:
 	Smoker(vec2 fluidResolution, vec2 smokeResolution);
 
 	// Override these!
-	virtual void update(float dt, Fluid* fluid, AudioSource* audioSource, PingPongFBO* smokeField) = 0;
+	virtual void update(float volume, float dt, Fluid* fluid, AudioSource* audioSource, PingPongFBO* smokeField) = 0;
 
 protected:
 	vec2 mFluidResolution, mSmokeResolution;

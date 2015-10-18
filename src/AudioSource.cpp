@@ -47,6 +47,8 @@ void AudioSource::update() {
 
 	mLastUpdateFrame = frame;
 	mAccumulatedSound += getVolume();
+
+	mLastVolume = math<float>::max(mLastVolume * 0.95, mMonitor->getVolume());
 }
 
 vector<float> AudioSource::getMagSpectrum() {
@@ -75,7 +77,7 @@ float AudioSource::getHighestVolumePos() {
 
 	for (vector<float>::size_type i = 0; i < size; i++) {
 		float pos = i / size;
-		if (math<float>::pow(spectrumVec[i], 1.5 * pos) > spectrumVec[max]) {
+		if (math<float>::pow(spectrumVec[i], 1.0 + 1.0 * (1.0 - pos)) > spectrumVec[max]) {
 			max = i;
 		}
 	}
@@ -86,6 +88,11 @@ float AudioSource::getHighestVolumePos() {
 float AudioSource::getVolume() 
 {
 	return mMonitor->getVolume();
+}
+
+float AudioSource::getSmoothedVolume()
+{
+	return mLastVolume;
 }
 
 float AudioSource::getAccumulatedSound()

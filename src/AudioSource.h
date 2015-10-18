@@ -15,6 +15,7 @@ public:
 	vector<float> getMagSpectrum();
 	gl::TextureRef getMagSpectrumTexture();
 	float getVolume();
+	float getSmoothedVolume();
 	float getAccumulatedSound();
 	float getHighestVolumePos();
 	vector<float> getEqs(int binCount);
@@ -29,4 +30,5 @@ private:
 
 	int mLastUpdateFrame;
 	float mAccumulatedSound;
+	float mLastVolume;
 };

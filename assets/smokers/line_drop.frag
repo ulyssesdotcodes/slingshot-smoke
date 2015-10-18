@@ -29,9 +29,16 @@ void main() {
 
 	float dropDistance = pos.y - i_smokeLineY;
 
-	float density = max(0, 0.0001 - dropDistance) * i_dt * i_volume * rand(vec2(i_time, pos.x));
+	if (pos.x < 0.01 || pos.x > 0.99) {
+		fragColor = vec4(current, 1);
+		return;
+	}
 
-	float temperature = current.y + density * 8;
+	float yMult = 0.5 + 0.5 * i_smokeLineY;
+
+	float density = max(0, 0.0125 - abs(dropDistance)) * i_dt * i_volume * rand(vec2(i_time, pos.x)) * 256 * yMult;
+
+	float temperature = current.y + density * 16;
 
 	float hue = current.z;
 	if(density > 0.0001) {
@@ -39,4 +46,4 @@ void main() {
 	}
 
 	fragColor = vec4(current.x + density, temperature, hue, 1);
-}
+} 

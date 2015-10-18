@@ -2,8 +2,6 @@
 
 BottomSmoker::BottomSmoker(vec2 fluidResolution, vec2 smokeResolution) : Smoker(fluidResolution, smokeResolution)
 {
-	mVolumeMult = 5.0;
-
 	gl::GlslProg::Format updateFormat;
 	updateFormat.vertex(app::loadAsset("passthru.vert"));
 
@@ -16,15 +14,14 @@ BottomSmoker::BottomSmoker(vec2 fluidResolution, vec2 smokeResolution) : Smoker(
 	mDropProg->uniform("i_resolution", smokeResolution);
 }
 
-void BottomSmoker::update(float dt, Fluid * fluid, AudioSource * audioSource, PingPongFBO* smokeField)
+void BottomSmoker::update(float volume, float dt, Fluid * fluid, AudioSource * audioSource, PingPongFBO* smokeField)
 {
 	mForcesProg->uniform("i_dt", dt);
 	mForcesProg->uniform("i_time", (float) app::getElapsedSeconds());
 	mDropProg->uniform("i_dt", dt);
 	mDropProg->uniform("i_time", (float) app::getElapsedSeconds());
-	mDropProg->uniform("i_volume", audioSource->getVolume() * mVolumeMult);
-	mDropProg->uniform("i_smokeLineY", 0.2f);
-	mDropProg->uniform("i_smokePosition", vec2(0.5, 0.4));
+	mDropProg->uniform("i_volume", audioSource->getVolume() * volume);
+	mDropProg->uniform("i_smokeLineY", audioSource->getHighestVolumePos() * 0.95f + 0.05f);
 
 	// Drop new smoke
 	drop(mDropProg, smokeField);
