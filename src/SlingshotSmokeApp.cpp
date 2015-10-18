@@ -22,6 +22,8 @@ class SlingshotSmokeApp : public App {
 	void drawParams();
 
 private:
+	float mVolumeMult;
+
 	float mLastTime;
 
 	AudioSource mAudioSource;
@@ -42,6 +44,8 @@ private:
 
 void SlingshotSmokeApp::setup()
 {
+	mVolumeMult = 5.0;
+
 	mLastTime = 0;
 
 	getWindowIndex(0)->getSignalDraw().connect([=]() { drawRender(); });
@@ -83,6 +87,10 @@ void SlingshotSmokeApp::setup()
 	WindowRef paramsWindow = createWindow(format);
 	paramsWindow->getSignalDraw().connect([=]() { drawParams(); });
 	mParams = params::InterfaceGl::create(paramsWindow, "Options", paramsSize);
+
+	mParams->addParam("Volume", &mVolumeMult)
+		.max(10.0)
+		.min(0.0);
 }
 
 void SlingshotSmokeApp::update()
@@ -100,7 +108,7 @@ void SlingshotSmokeApp::update()
 	mAudioSource.update();
 
 	// Update the smoker so that it has the correct forces shader and ping pong fbo
-	mSmokers[mCurrentSmoker]->update(5.0, dt, &mFluid, &mAudioSource, &mSmokeField);
+	mSmokers[mCurrentSmoker]->update(mVolumeMult, dt, &mFluid, &mAudioSource, &mSmokeField);
 }
 
 void SlingshotSmokeApp::drawRender()
