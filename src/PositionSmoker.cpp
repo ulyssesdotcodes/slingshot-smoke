@@ -25,9 +25,13 @@ PositionSmoker::PositionSmoker(vec2 fluidResolution, vec2 smokeResolution) : Smo
 
 void PositionSmoker::update(float volumeMult, float dt, Fluid* fluid, AudioSource* audioSource, PingPongFBO* smokeField) 
 {
-	float volume = audioSource->getSmoothedVolume();
+	float smoothedVolume = audioSource->getSmoothedVolume();
+	float volume = audioSource->getVolume();
 
-	mSmokeVelocity += mPerlin.noise(mSmokePosition.x, mSmokePosition.y, app::getElapsedSeconds()) * (0.5 - math<float>::min(volume, 0.5));
+	vec2 noise = vec2(mPerlin.noise(mSmokePosition.x, app::getElapsedSeconds()), mPerlin.noise(mSmokePosition.x, app::getElapsedSeconds()));
+	noise = glm::normalize(noise);
+
+	mSmokeVelocity += noise * (vec2((1.0 / 0.7) * math<float>::max(0, 0.7 - smoothedVolume)));
 
 	mSmokeVelocity = glm::normalize(mSmokeVelocity);
 
@@ -47,7 +51,7 @@ void PositionSmoker::update(float volumeMult, float dt, Fluid* fluid, AudioSourc
 	mForcesProg->uniform("i_time", (float) app::getElapsedSeconds());
 	mDropProg->uniform("i_dt", dt);
 	mDropProg->uniform("i_time", (float) app::getElapsedSeconds());
-	mDropProg->uniform("i_volume", volume * volumeMult);
+	mDropProg->uniform("i_volume", smoothedVolume * volumeMult);
 	mDropProg->uniform("i_smokePosition", mSmokePosition);
 
 	// Drop new smoke
