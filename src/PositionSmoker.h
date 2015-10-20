@@ -10,6 +10,7 @@ class PositionSmoker : public Smoker
 public:
 	PositionSmoker(vec2 fluidResolution, vec2 smokeResolution);
 	void update(float volume, float dt, Fluid* fluid, AudioSource* audioSource, PingPongFBO* smokeField);
+	virtual void light(vec2 smokePosition, params::InterfaceGlRef params);
 
 private:
 	Perlin mPerlin;
@@ -18,6 +19,5 @@ private:
 		mForcesProg,
 		mDropProg;
 
-	vec2 mSmokePosition,
-		mSmokeVelocity;
+	vec2 mSmokeVelocity;
 };

@@ -2,15 +2,22 @@
 
 #include "Smoker.h"
 
-class BottomSmoker : public Smoker
+class TransitionSmoker : public Smoker
 {
 public:
-	BottomSmoker(vec2 fluidResolution, vec2 smokeResolution);
+	TransitionSmoker(vec2 fluidResolution, vec2 smokeResolution);
 	void update(float volume, float dt, Fluid* fluid, AudioSource* audioSource, PingPongFBO* smokeField);
 	void light(vec2 smokePosition, params::InterfaceGlRef params);
 
 private:
+	vec2 mSmokeVelocity,
+		mDestination;
+
+	float mStartTime,
+		mSmokeFullness;
+
 	gl::GlslProgRef
 		mForcesProg,
-		mDropProg;
+		mLineDropProg,
+		mPositionDropProg;
 };

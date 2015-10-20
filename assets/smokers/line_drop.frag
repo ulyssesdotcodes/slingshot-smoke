@@ -7,6 +7,7 @@ uniform float i_volume;
 uniform float i_smokeLineY;
 uniform vec2 i_smokePosition;
 uniform sampler2D tex_prev;
+uniform float i_fullness;
 
 out vec4 fragColor;
 
@@ -29,20 +30,20 @@ void main() {
 
 	float dropDistance = pos.y - i_smokeLineY;
 
-	if (pos.x < 0.01 || pos.x > 0.99) {
+	if (pos.x < 0.01 || pos.x > 0.99 || abs(0.5 - pos.x) * 2 > i_fullness) {
 		fragColor = vec4(current, 1);
 		return;
 	}
 
 	float yMult = 0.5 + 0.5 * i_smokeLineY;
 
-	float density = max(0, 0.0125 - abs(dropDistance)) * i_dt * i_volume * rand(vec2(i_time, pos.x)) * 256 * yMult;
+	float density = max(0, 0.0125 - abs(dropDistance)) * i_dt * i_volume * rand(vec2(i_time, pos.x)) * yMult;
 
-	float temperature = current.y + density * 16;
+	float temperature = current.y + density * 1024;
 
 	float hue = current.z;
 	if(density > 0.0001) {
-		hue = abs(mod(i_time, 2.) - 1.) * 0.25;
+		hue = -abs(mod(i_time, 0.5) - 0.25);
 	}
 
 	fragColor = vec4(current.x + density, temperature, hue, 1);

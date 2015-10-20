@@ -3,6 +3,17 @@
 Smoker::Smoker(vec2 fluidResolution, vec2 smokeResolution) {
 	mFluidResolution = fluidResolution;
 	mSmokeResolution = smokeResolution;
+	mSmokePosition = vec2(0.5, 0.5);
+}
+
+void Smoker::light(vec2 smokePosition, params::InterfaceGlRef params)
+{
+	mSmokePosition = smokePosition;
+}
+
+vec2 Smoker::getPosition()
+{
+	return mSmokePosition;
 }
 
 // Drop new smoke onto the FBO

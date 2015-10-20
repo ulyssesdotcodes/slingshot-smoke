@@ -8,6 +8,7 @@
 #include "Smoker.h"
 #include "PositionSmoker.h"
 #include "BottomSmoker.h"
+#include "TransitionSmoker.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -58,9 +59,13 @@ void SlingshotSmokeApp::setup()
 
 	mFluid = Fluid(fluidResolution);
 	mSmokers.reserve(2);
-	mSmokers.push_back(shared_ptr<BottomSmoker>(new BottomSmoker(fluidResolution, smokeResolution)));
 	mSmokers.push_back(shared_ptr<PositionSmoker>(new PositionSmoker(fluidResolution, smokeResolution)));
-	mCurrentSmoker = 1;
+	mSmokers.push_back(shared_ptr<TransitionSmoker>(new TransitionSmoker(fluidResolution, smokeResolution)));
+	mSmokers.push_back(shared_ptr<BottomSmoker>(new BottomSmoker(fluidResolution, smokeResolution)));
+	mCurrentSmoker = 0;
+
+	mSmokers[mCurrentSmoker]->light(vec2(0.5, 0.1), mParams);
+
 
 	gl::GlslProg::Format renderFormat;
 	renderFormat.vertex(app::loadAsset("passthru.vert"));
@@ -90,7 +95,8 @@ void SlingshotSmokeApp::setup()
 
 	mParams->addParam("Volume", &mVolumeMult)
 		.max(10.0)
-		.min(0.0);
+		.min(0.0)
+		.step(0.1);
 }
 
 void SlingshotSmokeApp::update()
@@ -144,7 +150,9 @@ void SlingshotSmokeApp::keyDown(KeyEvent event) {
 		quit();
 		break;
 	case ' ':
+		vec2 smokePosition = mSmokers[mCurrentSmoker]->getPosition();
 		mCurrentSmoker = (mCurrentSmoker == mSmokers.size() - 1) ? 0 : mCurrentSmoker + 1;
+		mSmokers[mCurrentSmoker]->light(smokePosition, mParams);
 		break;
 	}
 }

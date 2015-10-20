@@ -8,7 +8,6 @@ PositionSmoker::PositionSmoker(vec2 fluidResolution, vec2 smokeResolution) : Smo
 {
 	mPerlin = Perlin();
 
-	mSmokePosition = vec2(0.5, 0.1);
 	mSmokeVelocity = vec2(0.1, 0.1);
 
 	gl::GlslProg::Format updateFormat;
@@ -53,6 +52,7 @@ void PositionSmoker::update(float volumeMult, float dt, Fluid* fluid, AudioSourc
 	mDropProg->uniform("i_time", (float) app::getElapsedSeconds());
 	mDropProg->uniform("i_volume", smoothedVolume * volumeMult);
 	mDropProg->uniform("i_smokePosition", mSmokePosition);
+	mDropProg->uniform("i_fullness", 1.0f);
 
 	// Drop new smoke
 	drop(mDropProg, smokeField);
@@ -62,4 +62,9 @@ void PositionSmoker::update(float volumeMult, float dt, Fluid* fluid, AudioSourc
 
 	// Update the fluid with the smoker's forces shader
 	fluid->update(dt, mForcesProg, smokeField->getTexture());
+}
+
+void PositionSmoker::light(vec2 smokePosition, params::InterfaceGlRef params)
+{
+	Smoker::light(smokePosition, params);
 }

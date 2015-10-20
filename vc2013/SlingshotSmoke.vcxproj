@@ -121,6 +121,7 @@
     <ClCompile Include="..\src\PingPongFBO.cpp" />
     <ClCompile Include="..\src\SlingshotSmokeApp.cpp" />
     <ClCompile Include="..\src\Smoker.cpp" />
+    <ClCompile Include="..\src\TransitionSmoker.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h" />
@@ -130,6 +131,7 @@
     <ClInclude Include="..\src\Fluid.h" />
     <ClInclude Include="..\src\PingPongFBO.h" />
     <ClInclude Include="..\src\Smoker.h" />
+    <ClInclude Include="..\src\TransitionSmoker.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

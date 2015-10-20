@@ -20,8 +20,9 @@ void BottomSmoker::update(float volume, float dt, Fluid * fluid, AudioSource * a
 	mForcesProg->uniform("i_time", (float) app::getElapsedSeconds());
 	mDropProg->uniform("i_dt", dt);
 	mDropProg->uniform("i_time", (float) app::getElapsedSeconds());
-	mDropProg->uniform("i_volume", audioSource->getVolume() * volume);
-	mDropProg->uniform("i_smokeLineY", audioSource->getHighestVolumePos() * 0.95f + 0.05f);
+	mDropProg->uniform("i_volume", audioSource->getSmoothedVolume() * volume);
+	mDropProg->uniform("i_smokeLineY", audioSource->getHighestVolumePos() * 0.5f + 0.05f);
+	mDropProg->uniform("i_fullness", 1.0f);
 
 	// Drop new smoke
 	drop(mDropProg, smokeField);
@@ -31,4 +32,9 @@ void BottomSmoker::update(float volume, float dt, Fluid * fluid, AudioSource * a
 
 	// Update the fluid with the smoker's forces shader
 	fluid->update(dt, mForcesProg, smokeField->getTexture());
+}
+
+void BottomSmoker::light(vec2 smokePosition, params::InterfaceGlRef params)
+{
+	Smoker::light(smokePosition, params);
 }
