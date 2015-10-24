@@ -24,7 +24,7 @@ vec4 boundary(vec2 pos) {
 	}
 
 	vec4 vel = texture2D(tex_velocity, pos + offset);
-	return vec4(-vel.xy, 0, 1);
+	return vec4(-vel.xy, vel.z, 1);
 }
 
 vec4 inner(vec2 pos) {

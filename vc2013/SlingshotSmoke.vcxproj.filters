@@ -54,6 +54,9 @@
     <ClCompile Include="..\src\TransitionSmoker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\FakeSmoker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -78,6 +81,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\TransitionSmoker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\FakeSmoker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -118,6 +124,9 @@
       <Filter>Shaders\Smokers</Filter>
     </None>
     <None Include="..\assets\smokers\line_drop.frag">
+      <Filter>Shaders\Smokers</Filter>
+    </None>
+    <None Include="..\assets\smokers\fake_drop.frag">
       <Filter>Shaders\Smokers</Filter>
     </None>
   </ItemGroup>

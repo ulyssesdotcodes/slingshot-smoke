@@ -26,6 +26,7 @@ void TransitionSmoker::light(vec2 smokePosition, params::InterfaceGlRef params)
 {
 	Smoker::light(smokePosition, params);
 	mSmokeVelocity = vec2(mDestination - mSmokePosition) * vec2(1.5);
+	mSmokeFullness = 0.0;
 }
 
 void TransitionSmoker::update(float volumeMult, float dt, Fluid * fluid, AudioSource * audioSource, PingPongFBO * smokeField)

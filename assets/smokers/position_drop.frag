@@ -31,7 +31,7 @@ void main() {
 
 	float density = max(0, 0.005 * i_fullness - dot(dropDistance, dropDistance)) * i_dt * i_volume * rand(vec2(i_time * pos.y, pos.x));
 
-	float temperature = current.y + density * 2048;
+	float temperature = current.y + density * 256;
 
 	float hue = current.z;
 	if(density > 0.0001) {

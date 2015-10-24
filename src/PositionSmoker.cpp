@@ -27,7 +27,7 @@ void PositionSmoker::update(float volumeMult, float dt, Fluid* fluid, AudioSourc
 	float smoothedVolume = audioSource->getSmoothedVolume();
 	float volume = audioSource->getVolume();
 
-	vec2 noise = vec2(mPerlin.noise(mSmokePosition.x, app::getElapsedSeconds()), mPerlin.noise(mSmokePosition.x, app::getElapsedSeconds()));
+	vec2 noise = vec2(mPerlin.noise(mSmokePosition.x, app::getElapsedSeconds() * 0.8), mPerlin.noise(mSmokePosition.y, app::getElapsedSeconds() * 1.6));
 	noise = glm::normalize(noise);
 
 	mSmokeVelocity += noise * (vec2((1.0 / 0.7) * math<float>::max(0, 0.7 - smoothedVolume)));
@@ -37,11 +37,11 @@ void PositionSmoker::update(float volumeMult, float dt, Fluid* fluid, AudioSourc
 	mSmokePosition += mSmokeVelocity * dt * volume;
 
 	// If the position is close to the edge, reverse the velocity
-	if ((mSmokePosition.x > 0.9 && mSmokeVelocity.x > 0) || (mSmokePosition.x < 0.1 && mSmokeVelocity.x < 0)) {
+	if ((mSmokePosition.x > 0.8 && mSmokeVelocity.x > 0) || (mSmokePosition.x < 0.2 && mSmokeVelocity.x < 0)) {
 		mSmokeVelocity.x = -mSmokeVelocity.x;
 	}
 
-	if ((mSmokePosition.y > 0.9 && mSmokeVelocity.y > 0) || (mSmokePosition.y < 0.1 && mSmokeVelocity.y < 0)) {
+	if ((mSmokePosition.y > 0.8 && mSmokeVelocity.y > 0) || (mSmokePosition.y < 0.2 && mSmokeVelocity.y < 0)) {
 		mSmokeVelocity.y = -mSmokeVelocity.y;
 	}
 
@@ -54,14 +54,14 @@ void PositionSmoker::update(float volumeMult, float dt, Fluid* fluid, AudioSourc
 	mDropProg->uniform("i_smokePosition", mSmokePosition);
 	mDropProg->uniform("i_fullness", 1.0f);
 
+	// Update the fluid with the smoker's forces shader
+	fluid->update(dt, mForcesProg, smokeField->getTexture());
+
 	// Drop new smoke
 	drop(mDropProg, smokeField);
 
 	// Use the fluid to advect the smoke
 	fluid->advect(dt, smokeField);
-
-	// Update the fluid with the smoker's forces shader
-	fluid->update(dt, mForcesProg, smokeField->getTexture());
 }
 
 void PositionSmoker::light(vec2 smokePosition, params::InterfaceGlRef params)

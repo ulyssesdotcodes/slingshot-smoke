@@ -106,6 +106,7 @@
     <None Include="..\assets\fluid\subtract_pressure.frag" />
     <None Include="..\assets\fluid\velocity_divergence.frag" />
     <None Include="..\assets\passthru.vert" />
+    <None Include="..\assets\smokers\fake_drop.frag" />
     <None Include="..\assets\smokers\line_drop.frag" />
     <None Include="..\assets\smokers\smoke_draw.frag" />
     <None Include="..\assets\smokers\position_drop.frag" />
@@ -116,6 +117,7 @@
   <ItemGroup>
     <ClCompile Include="..\src\AudioSource.cpp" />
     <ClCompile Include="..\src\BottomSmoker.cpp" />
+    <ClCompile Include="..\src\FakeSmoker.cpp" />
     <ClCompile Include="..\src\PositionSmoker.cpp" />
     <ClCompile Include="..\src\Fluid.cpp" />
     <ClCompile Include="..\src\PingPongFBO.cpp" />
@@ -127,6 +129,7 @@
     <ClInclude Include="..\include\Resources.h" />
     <ClInclude Include="..\src\AudioSource.h" />
     <ClInclude Include="..\src\BottomSmoker.h" />
+    <ClInclude Include="..\src\FakeSmoker.h" />
     <ClInclude Include="..\src\PositionSmoker.h" />
     <ClInclude Include="..\src\Fluid.h" />
     <ClInclude Include="..\src\PingPongFBO.h" />

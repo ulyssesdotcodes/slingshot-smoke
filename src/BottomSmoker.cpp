@@ -16,12 +16,14 @@ BottomSmoker::BottomSmoker(vec2 fluidResolution, vec2 smokeResolution) : Smoker(
 
 void BottomSmoker::update(float volume, float dt, Fluid * fluid, AudioSource * audioSource, PingPongFBO* smokeField)
 {
+
+	float highestVolume = audioSource->getHighestVolumePos();
 	mForcesProg->uniform("i_dt", dt);
 	mForcesProg->uniform("i_time", (float) app::getElapsedSeconds());
 	mDropProg->uniform("i_dt", dt);
 	mDropProg->uniform("i_time", (float) app::getElapsedSeconds());
 	mDropProg->uniform("i_volume", audioSource->getSmoothedVolume() * volume);
-	mDropProg->uniform("i_smokeLineY", audioSource->getHighestVolumePos() * 0.5f + 0.05f);
+	mDropProg->uniform("i_smokeLineY", math<float>::min(0.5, highestVolume * 2.0) + 0.05f);
 	mDropProg->uniform("i_fullness", 1.0f);
 
 	// Drop new smoke

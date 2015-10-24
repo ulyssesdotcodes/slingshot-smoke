@@ -9,6 +9,7 @@
 #include "PositionSmoker.h"
 #include "BottomSmoker.h"
 #include "TransitionSmoker.h"
+#include "FakeSmoker.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -59,12 +60,13 @@ void SlingshotSmokeApp::setup()
 
 	mFluid = Fluid(fluidResolution);
 	mSmokers.reserve(2);
+	mSmokers.push_back(shared_ptr<FakeSmoker>(new FakeSmoker(fluidResolution, smokeResolution)));
 	mSmokers.push_back(shared_ptr<PositionSmoker>(new PositionSmoker(fluidResolution, smokeResolution)));
 	mSmokers.push_back(shared_ptr<TransitionSmoker>(new TransitionSmoker(fluidResolution, smokeResolution)));
 	mSmokers.push_back(shared_ptr<BottomSmoker>(new BottomSmoker(fluidResolution, smokeResolution)));
 	mCurrentSmoker = 0;
 
-	mSmokers[mCurrentSmoker]->light(vec2(0.5, 0.1), mParams);
+	mSmokers[mCurrentSmoker]->light(vec2(0.5, 0.2), mParams);
 
 
 	gl::GlslProg::Format renderFormat;

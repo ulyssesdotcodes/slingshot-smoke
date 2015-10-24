@@ -19,5 +19,8 @@ private:
 		mForcesProg,
 		mDropProg;
 
-	vec2 mSmokeVelocity;
+	vec2 mSmokeVelocity2,
+		mSmokeVelocity;
+
+	vec2 mSmokePosition2;
 };

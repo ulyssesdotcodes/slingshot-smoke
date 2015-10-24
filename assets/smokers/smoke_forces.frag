@@ -24,9 +24,10 @@ vec4 boundary(vec2 pos) {
 	}
 	else if(pos.y * i_resolution.y >= i_resolution.y - 1) {
 		offset.y = -1/i_resolution.y;
+		return vec4(texture2D(tex_velocity, pos + offset).xy, 0, 1);
 	}
 
-	return texture2D(tex_velocity, pos + offset);
+	return vec4(-texture2D(tex_velocity, pos + offset).xy, 0, 1);
 }
 
 vec4 inner(vec2 pos) {
@@ -37,7 +38,7 @@ vec4 inner(vec2 pos) {
 	v.y += Fb;
 
 	// Add this line in to move the smoke back and forth a bit
-	// v.x += cos(i_time * 0.25) * cos(i_time * 0.25) - 0.5;
+	 //v.x += cos(i_time * 0.25) * cos(i_time * 0.25) - 0.5;
 
 	return v;
 }
